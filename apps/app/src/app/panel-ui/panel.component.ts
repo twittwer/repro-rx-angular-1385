@@ -1,19 +1,21 @@
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { PushModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template';
 import { PANEL_STATE, PANEL_STATE_PROVIDER } from './panel-state.provider';
 
 @Component({
   standalone: true,
-  imports: [NgIf, PushModule],
+  imports: [NgIf, LetModule],
   selector: 'app-panel',
   template: `
-    <button (click)="_panelState.toggleIsOpen()">
-      {{ (_panelState.isOpen$ | push) ? 'close' : 'open' }}
-    </button>
-    <div *ngIf="_panelState.isOpen$ | push">
-      <ng-content></ng-content>
-    </div>
+    <ng-container *rxLet="_panelState.isOpen$; let isOpen">
+      <button (click)="_panelState.toggleIsOpen()">
+        {{ isOpen ? 'close' : 'open' }}
+      </button>
+      <div *ngIf="isOpen">
+        <ng-content></ng-content>
+      </div>
+    </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [PANEL_STATE_PROVIDER],
