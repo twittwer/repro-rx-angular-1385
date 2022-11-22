@@ -6,7 +6,6 @@ import {
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { Todo } from './todo';
 import {
   selectTodosPageState,
@@ -62,9 +61,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodosPageComponent {
-  protected readonly _vm$: Observable<TodosPageState> = this._store
-    .select(selectTodosPageState)
-    .pipe(debounceTime(0));
+  protected readonly _vm$: Observable<TodosPageState> =
+    this._store.select(selectTodosPageState) /*.pipe(debounceTime(0))*/;
 
   protected readonly _trackById: TrackByFunction<Todo> = (_, todo) => todo.id;
 
