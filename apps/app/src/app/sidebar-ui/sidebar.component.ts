@@ -1,25 +1,34 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { AsyncPipe, NgIf, NgTemplateOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  inject,
+} from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { SidebarService } from './sidebar.service';
 
 @Component({
+  standalone: true,
+  imports: [NgIf, AsyncPipe, NgTemplateOutlet],
   selector: 'app-sidebar',
   template: `
-    <ng-container *ngIf="templateRef$ | async as templateRef">
-      <ng-container *ngTemplateOutlet="templateRef"></ng-container>
-    </ng-container>
+    <ng-container
+      *ngIf="_templateRef$ | async as templateRef"
+      [ngTemplateOutlet]="templateRef"
+    ></ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
   @HostBinding('hidden')
-  public isHidden = true;
+  protected _isHidden = true;
 
-  public templateRef$ = this.sidebarService.selectTemplate().pipe(
-    tap((templateRef) => {
-      this.isHidden = !templateRef;
-    })
-  );
-
-  constructor(private readonly sidebarService: SidebarService) {}
+  protected readonly _templateRef$ = inject(SidebarService)
+    .selectTemplate()
+    .pipe(
+      tap((templateRef) => {
+        this._isHidden = !templateRef;
+      })
+    );
 }

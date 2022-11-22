@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { LetModule } from '@rx-angular/template';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { SidebarUiModule } from '../sidebar-ui';
+import { SidebarDirective } from '../sidebar-ui';
 import { DescriptionPanelComponent } from './description-panel.component';
 import { Todo } from './todo';
 
@@ -22,7 +22,7 @@ interface TodosPageState {
     NgIf,
     CdkTableModule,
     LetModule,
-    SidebarUiModule,
+    SidebarDirective,
     DescriptionPanelComponent,
   ],
   selector: 'app-todos-page',

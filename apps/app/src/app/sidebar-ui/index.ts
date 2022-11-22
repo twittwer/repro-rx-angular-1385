@@ -1,1 +1,2 @@
-export { SidebarUiModule } from './sidebar-ui.module';
+export { SidebarComponent } from './sidebar.component';
+export { SidebarDirective } from './sidebar.directive';

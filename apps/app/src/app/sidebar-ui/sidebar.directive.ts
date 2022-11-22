@@ -1,20 +1,25 @@
-import { Directive, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import {
+  Directive,
+  inject,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+} from '@angular/core';
 import { SidebarService } from './sidebar.service';
 
 @Directive({
+  standalone: true,
   selector: '[appSidebar]',
 })
 export class SidebarDirective implements OnInit, OnDestroy {
-  constructor(
-    private readonly sidebarService: SidebarService,
-    private readonly templateRef: TemplateRef<unknown>
-  ) {}
+  private readonly _templateRef = inject(TemplateRef);
+  private readonly _sidebarService = inject(SidebarService);
 
   public ngOnInit() {
-    this.sidebarService.setTemplate(this.templateRef);
+    this._sidebarService.setTemplate(this._templateRef);
   }
 
   public ngOnDestroy() {
-    this.sidebarService.setTemplate(undefined);
+    this._sidebarService.setTemplate(undefined);
   }
 }
