@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxState } from '@rx-angular/state';
+import { LetModule } from '@rx-angular/template';
+import { PanelUiModule } from '../panel-ui';
 import { Todo } from './todo';
 
 @Component({
+  standalone: true,
+  imports: [LetModule, PanelUiModule],
   selector: 'app-description-panel',
   template: `
     <app-panel *rxLet="_state$; let state">

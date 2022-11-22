@@ -1,18 +1,30 @@
+import { CdkTableModule } from '@angular/cdk/table';
+import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   TrackByFunction,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { LetModule } from '@rx-angular/template';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { SidebarUiModule } from '../sidebar-ui';
+import { DescriptionPanelComponent } from './description-panel.component';
 import { Todo } from './todo';
-import {
-  selectTodosPageState,
-  TodosPageState,
-} from './todos-page.component.selectors';
+
+interface TodosPageState {
+  readonly todos: readonly Todo[];
+  readonly activeTodo?: Todo;
+}
 
 @Component({
+  standalone: true,
+  imports: [
+    NgIf,
+    CdkTableModule,
+    LetModule,
+    SidebarUiModule,
+    DescriptionPanelComponent,
+  ],
   selector: 'app-todos-page',
   template: `
     <ng-container *rxLet="_vm$; let vm">
@@ -61,17 +73,34 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodosPageComponent {
+  private readonly _activeTodoId$ = new BehaviorSubject<Todo['id'] | undefined>(
+    undefined
+  );
+
   protected readonly _vm$: Observable<TodosPageState> =
-    this._store.select(selectTodosPageState) /*.pipe(debounceTime(0))*/;
+    this._activeTodoId$.pipe(
+      map((activeTodoId) => ({
+        todos: TODOS,
+        activeTodo: TODOS.find((todo) => todo.id === activeTodoId),
+      }))
+    );
 
   protected readonly _trackById: TrackByFunction<Todo> = (_, todo) => todo.id;
 
-  constructor(
-    private readonly _store: Store,
-    private readonly _router: Router
-  ) {}
-
   protected _onRowClick(todo: Todo): void {
-    this._router.navigate(['/', todo.id], { replaceUrl: true });
+    this._activeTodoId$.next(todo.id);
   }
 }
+
+const TODOS: Todo[] = [
+  {
+    id: '1',
+    title: 'With Description',
+    description: 'Informative Description',
+  },
+  {
+    id: '2',
+    title: 'Without Description',
+    description: '',
+  },
+];

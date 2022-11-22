@@ -1,1 +1,1 @@
-export { TodosFeatureModule } from './todos-feature.module';
+export { TodosPageComponent } from './todos-page.component';

@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
+import { SidebarUiModule } from './sidebar-ui';
+import { TodosPageComponent } from './todos-feature';
 
 @Component({
+  standalone: true,
+  imports: [TodosPageComponent, SidebarUiModule],
   selector: 'app-root',
   template: `
-    <router-outlet></router-outlet>
+    <app-todos-page></app-todos-page>
     <app-sidebar></app-sidebar>
   `,
 })
