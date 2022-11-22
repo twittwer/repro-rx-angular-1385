@@ -1,33 +1,30 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { LetModule } from '@rx-angular/template';
-import { PanelUiModule } from '../panel-ui';
+import { PanelComponent } from '../panel-ui';
 import { Todo } from './todo';
 
 @Component({
   standalone: true,
-  imports: [LetModule, PanelUiModule],
+  imports: [LetModule, PanelComponent],
   selector: 'app-description-panel',
   template: `
     <app-panel *rxLet="_state$; let state">
-      <app-panel-header> Description </app-panel-header>
-      <ng-container *appPanelContent>
-        <input
-          #input
-          type="text"
-          [value]="state.value"
-          (focus)="_onEdit()"
-          (input)="_onInput(input.value)"
-          aria-label="Todo Description"
-        />
-      </ng-container>
+      <input
+        #input
+        type="text"
+        [value]="state.value"
+        (focus)="_onEdit()"
+        (input)="_onInput(input.value)"
+        aria-label="Todo Description"
+      />
     </app-panel>
   `,
   providers: [RxState],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DescriptionPanelComponent {
-  public readonly _state$ = this._state.select();
+  protected readonly _state$ = this._state.select();
 
   @Input()
   public set todo(todo: Todo) {
@@ -40,14 +37,14 @@ export class DescriptionPanelComponent {
     }>
   ) {}
 
-  public _onEdit() {
+  protected _onEdit(): void {
     // THIS TRIGGERS THE CORRECT RENDERING
     this._state.set({
       /*mode: 'edit'*/
     });
   }
 
-  public _onInput(value: string): void {
+  protected _onInput(value: string): void {
     this._state.set({ value });
   }
 }

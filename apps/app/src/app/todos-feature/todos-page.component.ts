@@ -37,16 +37,14 @@ interface TodosPageState {
           *cdkRowDef="let todo; columns: ['title']; let index = index"
           cdk-row
           [style.background]="
-            vm.activeTodo && vm.activeTodo.id === todo.id
-              ? 'lightblue'
-              : undefined
+            vm.activeTodo?.id === todo.id ? 'lightblue' : undefined
           "
           (click)="_onRowClick(todo)"
         ></tr>
       </table>
 
-      <ng-container *appSidebar>
-        <ng-container *ngIf="vm.activeTodo">
+      <ng-container *ngIf="vm.activeTodo">
+        <ng-container *appSidebar>
           <h2>{{ vm.activeTodo.title }}</h2>
           <app-description-panel [todo]="vm.activeTodo"></app-description-panel>
         </ng-container>
@@ -54,21 +52,9 @@ interface TodosPageState {
     </ng-container>
   `,
   styles: [
-    `
-      :host {
-        padding: 1rem;
-      }
-
-      table {
-        width: 100%;
-        border: 1px solid lightgrey;
-      }
-
-      tr {
-        height: 50px;
-        cursor: pointer;
-      }
-    `,
+    ':host { padding: 1rem; }',
+    'table { width: 100%; border: 1px solid lightgrey; }',
+    'tr { height: 50px; cursor: pointer; }',
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
